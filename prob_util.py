@@ -10,3 +10,6 @@ def uniform_distribution(eta):
         D[i] = 1 / (2*eta + 1)
 
     return D
+
+def binomial_distribution():
+    pass
