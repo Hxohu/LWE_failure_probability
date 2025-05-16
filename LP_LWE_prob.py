@@ -1,11 +1,18 @@
 import prob_util
 from math import log
 
-class LP_LWE():
+def frodo1344_dis():
+    pro = [18286, 14320, 6876, 2023, 364, 40, 2]
+    D = {}
+    for i in range(-6, 7):
+        D[i] = pro[abs(i)] / (2**16)
+    
+    return D
+
+class Frodo_1344():
     q = None
     n1 = None
     n2 = None
-    m_len = None
 
     R1 = None
     R2 = None
@@ -13,18 +20,17 @@ class LP_LWE():
     e2 = None
     e3 = None
 
-    def __init__(self, q, n1, n2, m_len):
+    def __init__(self, q, n1, n2):
         self.q = q
         self.n1 = n1
         self.n2 = n2
-        self.m_len = m_len
-
+        
     def select_distribution(self):
-        self.R1 = prob_util.centered_binomial_distribution(int(input("请输入R1的中心二项分布概率参数:")))
-        self.R2 = prob_util.centered_binomial_distribution(int(input("请输入R2的中心二项分布概率参数:")))
-        self.e1 = prob_util.centered_binomial_distribution(int(input("请输入e1的中心二项分布概率参数:")))
-        self.e2 = prob_util.centered_binomial_distribution(int(input("请输入e2的中心二项分布概率参数:")))
-        self.e3 = prob_util.centered_binomial_distribution(int(input("请输入e3的中心二项分布概率参数:")))
+        self.R1 = frodo1344_dis()
+        self.R2 = frodo1344_dis()
+        self.e1 = frodo1344_dis()
+        self.e2 = frodo1344_dis()
+        self.e3 = frodo1344_dis()
 
     def failure_prob(self):
         self.select_distribution()
@@ -38,10 +44,10 @@ class LP_LWE():
         D = prob_util.convolution_law(e1R1, e2R2)
         F = prob_util.convolution_law(D, self.e3)
 
-        return prob_util.tail_probability(F, int(self.q / 4)) * self.m_len
+        return prob_util.tail_probability(F, int(self.q / 32)) 
     
 if __name__ == "__main__":
-    lp_lwe = LP_LWE(3329, 640, 640, 128)
-    f = lp_lwe.failure_prob()
+    frodo_1344 = Frodo_1344(2**16, 1344, 1344)
+    f = frodo_1344.failure_prob()
 
     print ("failure: %.1f = 2^%.1f"%(f, log(f + 2.**(-300))/log(2)))
